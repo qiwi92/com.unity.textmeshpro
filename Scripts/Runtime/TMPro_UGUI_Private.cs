@@ -1400,7 +1400,7 @@ namespace TMPro
                 {
                     if (m_subTextObjects[i] == null)
                     {
-                        m_subTextObjects[i] = TMP_SubMeshUI.AddSubTextObject(this, m_materialReferences[i]);
+                        m_subTextObjects[i] = TMP_SubMeshUI.AddSubTextObject(this, m_materialReferences[i],DeparentSprite);
 
                         // Not sure this is necessary
                         m_textInfo.meshInfo[i].vertices = null;

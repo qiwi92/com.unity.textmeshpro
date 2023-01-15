@@ -21,8 +21,8 @@ namespace TMPro
             get { return m_fontAsset; }
             set { m_fontAsset = value; }
         }
-        [SerializeField]
-        private TMP_FontAsset m_fontAsset;
+
+        [SerializeField] private TMP_FontAsset m_fontAsset;
 
 
         /// <summary>
@@ -33,8 +33,8 @@ namespace TMPro
             get { return m_spriteAsset; }
             set { m_spriteAsset = value; }
         }
-        [SerializeField]
-        private TMP_SpriteAsset m_spriteAsset;
+
+        [SerializeField] private TMP_SpriteAsset m_spriteAsset;
 
 
         /// <summary>
@@ -74,8 +74,8 @@ namespace TMPro
                 SetMaterialDirty();
             }
         }
-        [SerializeField]
-        private Material m_material;
+
+        [SerializeField] private Material m_material;
 
 
         /// <summary>
@@ -86,8 +86,8 @@ namespace TMPro
             get { return m_sharedMaterial; }
             set { SetSharedMaterial(value); }
         }
-        [SerializeField]
-        private Material m_sharedMaterial;
+
+        [SerializeField] private Material m_sharedMaterial;
 
 
         /// <summary>
@@ -109,6 +109,7 @@ namespace TMPro
                 SetSharedMaterial(m_fallbackMaterial);
             }
         }
+
         private Material m_fallbackMaterial;
 
 
@@ -120,6 +121,7 @@ namespace TMPro
             get { return m_fallbackSourceMaterial; }
             set { m_fallbackSourceMaterial = value; }
         }
+
         private Material m_fallbackSourceMaterial;
 
 
@@ -128,10 +130,7 @@ namespace TMPro
         /// </summary>
         public override Material materialForRendering
         {
-            get
-            {
-                return TMP_MaterialManager.GetMaterialForRendering(this, m_sharedMaterial);
-            }
+            get { return TMP_MaterialManager.GetMaterialForRendering(this, m_sharedMaterial); }
         }
 
 
@@ -143,8 +142,8 @@ namespace TMPro
             get { return m_isDefaultMaterial; }
             set { m_isDefaultMaterial = value; }
         }
-        [SerializeField]
-        private bool m_isDefaultMaterial;
+
+        [SerializeField] private bool m_isDefaultMaterial;
 
 
         /// <summary>
@@ -155,8 +154,8 @@ namespace TMPro
             get { return m_padding; }
             set { m_padding = value; }
         }
-        [SerializeField]
-        private float m_padding;
+
+        [SerializeField] private float m_padding;
 
 
         /// <summary>
@@ -176,6 +175,7 @@ namespace TMPro
             }
             set { m_mesh = value; }
         }
+
         private Mesh m_mesh;
 
 
@@ -192,16 +192,13 @@ namespace TMPro
                 return m_TextComponent;
             }
         }
-        [SerializeField]
-        private TextMeshProUGUI m_TextComponent;
+
+        [SerializeField] private TextMeshProUGUI m_TextComponent;
 
 
-        [System.NonSerialized]
-        private bool m_isRegisteredForEvents;
+        [System.NonSerialized] private bool m_isRegisteredForEvents;
         private bool m_materialDirty;
-        [SerializeField]
-        private int m_materialReferenceIndex;
-
+        [SerializeField] private int m_materialReferenceIndex;
 
 
         /// <summary>
@@ -209,13 +206,17 @@ namespace TMPro
         /// </summary>
         /// <param name="textComponent"></param>
         /// <param name="materialReference"></param>
+        /// <param name="deparentSprite"></param>
         /// <returns></returns>
-        public static TMP_SubMeshUI AddSubTextObject(TextMeshProUGUI textComponent, MaterialReference materialReference)
+        public static TMP_SubMeshUI AddSubTextObject(TextMeshProUGUI textComponent, MaterialReference materialReference,
+            bool deparentSprite)
         {
-            GameObject go = new GameObject("TMP UI SubObject [" + materialReference.material.name + "]", typeof(RectTransform));
+            GameObject go = new GameObject("TMP UI SubObject [" + materialReference.material.name + "]",
+                typeof(RectTransform));
             go.hideFlags = HideFlags.DontSave;
 
-            go.transform.SetParent(textComponent.transform.parent, false);
+            go.transform.SetParent(deparentSprite ? textComponent.transform.parent : textComponent.transform, false);
+
             go.transform.SetAsFirstSibling();
             go.layer = textComponent.gameObject.layer;
 
@@ -243,7 +244,6 @@ namespace TMPro
         }
 
 
-
         /// <summary>
         ///
         /// </summary>
@@ -254,8 +254,7 @@ namespace TMPro
             // Register Callbacks for various events.
             if (!m_isRegisteredForEvents)
             {
-
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
                 TMPro_EventManager.MATERIAL_PROPERTY_EVENT.Add(ON_MATERIAL_PROPERTY_CHANGED);
                 TMPro_EventManager.FONT_PROPERTY_EVENT.Add(ON_FONT_PROPERTY_CHANGED);
                 //TMPro_EventManager.TEXTMESHPRO_PROPERTY_EVENT.Add(ON_TEXTMESHPRO_PROPERTY_CHANGED);
@@ -263,7 +262,7 @@ namespace TMPro
                 //TMPro_EventManager.TEXT_STYLE_PROPERTY_EVENT.Add(ON_TEXT_STYLE_CHANGED);
                 TMPro_EventManager.SPRITE_ASSET_PROPERTY_EVENT.Add(ON_SPRITE_ASSET_PROPERTY_CHANGED);
                 //TMPro_EventManager.TMP_SETTINGS_PROPERTY_EVENT.Add(ON_TMP_SETTINGS_CHANGED);
-            #endif
+#endif
 
                 m_isRegisteredForEvents = true;
             }
@@ -315,7 +314,7 @@ namespace TMPro
                 m_fallbackMaterial = null;
             }
 
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
             // Unregister the event this object was listening to
             TMPro_EventManager.MATERIAL_PROPERTY_EVENT.Remove(ON_MATERIAL_PROPERTY_CHANGED);
             TMPro_EventManager.FONT_PROPERTY_EVENT.Remove(ON_FONT_PROPERTY_CHANGED);
@@ -324,7 +323,7 @@ namespace TMPro
             //TMPro_EventManager.TEXT_STYLE_PROPERTY_EVENT.Remove(ON_TEXT_STYLE_CHANGED);
             TMPro_EventManager.SPRITE_ASSET_PROPERTY_EVENT.Remove(ON_SPRITE_ASSET_PROPERTY_CHANGED);
             //TMPro_EventManager.TMP_SETTINGS_PROPERTY_EVENT.Remove(ON_TMP_SETTINGS_CHANGED);
-            #endif
+#endif
 
             m_isRegisteredForEvents = false;
 
@@ -339,7 +338,7 @@ namespace TMPro
         }
 
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         // Event received when custom material editor properties are changed.
         void ON_MATERIAL_PROPERTY_CHANGED(bool isChanged, Material mat)
         {
@@ -350,7 +349,8 @@ namespace TMPro
             int targetMaterialID = mat.GetInstanceID();
             int sharedMaterialID = m_sharedMaterial.GetInstanceID();
             int maskingMaterialID = m_MaskMaterial == null ? 0 : m_MaskMaterial.GetInstanceID();
-            int fallbackSourceMaterialID = m_fallbackSourceMaterial == null ? 0 : m_fallbackSourceMaterial.GetInstanceID();
+            int fallbackSourceMaterialID =
+                m_fallbackSourceMaterial == null ? 0 : m_fallbackSourceMaterial.GetInstanceID();
 
             // Sync culling with parent text object
             bool hasCullModeProperty = m_sharedMaterial.HasProperty(ShaderUtilities.ShaderTag_CullMode);
@@ -363,7 +363,8 @@ namespace TMPro
             }
 
             // Filter events and return if the affected material is not this object's material.
-            if (m_fallbackMaterial != null && fallbackSourceMaterialID == targetMaterialID && TMP_Settings.matchMaterialPreset)
+            if (m_fallbackMaterial != null && fallbackSourceMaterialID == targetMaterialID &&
+                TMP_Settings.matchMaterialPreset)
             {
                 TMP_MaterialManager.CopyMaterialPresetProperties(mat, m_fallbackMaterial);
 
@@ -427,11 +428,11 @@ namespace TMPro
         void ON_DRAG_AND_DROP_MATERIAL(GameObject obj, Material currentMaterial, Material newMaterial)
         {
             // Check if event applies to this current object
-            #if UNITY_2018_2_OR_NEWER
+#if UNITY_2018_2_OR_NEWER
             if (obj == gameObject || UnityEditor.PrefabUtility.GetCorrespondingObjectFromSource(gameObject) == obj)
-            #else
+#else
             if (obj == gameObject || UnityEditor.PrefabUtility.GetPrefabParent(gameObject) == obj)
-            #endif
+#endif
             {
                 if (!m_isDefaultMaterial) return;
 
@@ -486,7 +487,7 @@ namespace TMPro
             //SetVerticesDirty();
             //SetMaterialDirty();
         }
-        #endif
+#endif
 
         /// <summary>
         ///
@@ -520,7 +521,8 @@ namespace TMPro
 
             if (m_StencilValue > 0)
             {
-                var maskMat = StencilMaterial.Add(mat, (1 << m_StencilValue) - 1, StencilOp.Keep, CompareFunction.Equal, ColorWriteMask.All, (1 << m_StencilValue) - 1, 0);
+                var maskMat = StencilMaterial.Add(mat, (1 << m_StencilValue) - 1, StencilOp.Keep, CompareFunction.Equal,
+                    ColorWriteMask.All, (1 << m_StencilValue) - 1, 0);
                 StencilMaterial.Remove(m_MaskMaterial);
                 m_MaskMaterial = maskMat;
                 mat = m_MaskMaterial;
@@ -536,7 +538,8 @@ namespace TMPro
         /// <returns></returns>
         public float GetPaddingForMaterial()
         {
-            float padding = ShaderUtilities.GetPadding(m_sharedMaterial, m_TextComponent.extraPadding, m_TextComponent.isUsingBold);
+            float padding = ShaderUtilities.GetPadding(m_sharedMaterial, m_TextComponent.extraPadding,
+                m_TextComponent.isUsingBold);
 
             return padding;
         }
@@ -598,7 +601,6 @@ namespace TMPro
         /// </summary>
         public override void SetLayoutDirty()
         {
-
         }
 
 
@@ -644,6 +646,7 @@ namespace TMPro
 
             return m_RootCanvasTransform;
         }
+
         private Transform m_RootCanvasTransform;
 
         /// <summary>
@@ -715,10 +718,10 @@ namespace TMPro
             canvasRenderer.SetMaterial(materialForRendering, 0);
             //canvasRenderer.SetTexture(materialForRendering.mainTexture);
 
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
             if (m_sharedMaterial != null && gameObject.name != "TMP SubMeshUI [" + m_sharedMaterial.name + "]")
                 gameObject.name = "TMP SubMeshUI [" + m_sharedMaterial.name + "]";
-            #endif
+#endif
         }
 
 
@@ -743,7 +746,6 @@ namespace TMPro
         //     this.m_ShouldRecalculateStencil = true;
         //     SetMaterialDirty();
         // }
-
 
 
         /// <summary>
@@ -842,10 +844,10 @@ namespace TMPro
             //SetVerticesDirty();
             SetMaterialDirty();
 
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
             //if (m_sharedMaterial != null)
             //    gameObject.name = "TMP SubMesh [" + m_sharedMaterial.name + "]";
-            #endif
+#endif
         }
     }
 }
