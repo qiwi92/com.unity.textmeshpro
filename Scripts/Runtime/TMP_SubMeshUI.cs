@@ -215,7 +215,7 @@ namespace TMPro
             GameObject go = new GameObject("TMP UI SubObject [" + materialReference.material.name + "]", typeof(RectTransform));
             go.hideFlags = HideFlags.DontSave;
 
-            go.transform.SetParent(textComponent.transform, false);
+            go.transform.SetParent(textComponent.transform.parent, false);
             go.transform.SetAsFirstSibling();
             go.layer = textComponent.gameObject.layer;
 
