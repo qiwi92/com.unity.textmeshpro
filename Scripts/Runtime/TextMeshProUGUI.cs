@@ -17,6 +17,7 @@ namespace TMPro
     [HelpURL("https://docs.unity3d.com/Packages/com.unity.textmeshpro@3.0")]
     public partial class TextMeshProUGUI : TMP_Text, ILayoutElement
     {
+        public bool DeparentSprite;
         /// <summary>
         /// Get the material that will be used for rendering.
         /// </summary>
